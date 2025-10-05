@@ -21,12 +21,14 @@ namespace SharpMetal.Generator
 
             while (!sr.EndOfStream)
             {
-                var line = (sr.ReadLine() ?? "").Trim();
+                var line = GeneratorUtils.ReadNextCodeLine(sr);
+                if (line == null)
+                {
+                    break;
+                }
 
                 // Ignore garbage
-                if (line == string.Empty ||
-                    line.StartsWith("//") ||
-                    line.StartsWith("::") ||
+                if (line.StartsWith("::") ||
                     line.StartsWith("[[") ||
                     line.StartsWith("/**") ||
                     line.StartsWith("#error") ||
@@ -68,9 +70,10 @@ namespace SharpMetal.Generator
                     continue;
                 }
 
-                // These take two lines, no idea why, so let's just read two lines in one go
+                // These take two lines, no idea why
                 if (line.StartsWith("_MTL_PRIVATE_DEF_SEL"))
                 {
+                    // Let's just consume the second line straight away
                     sr.ReadLine();
                     continue;
                 }

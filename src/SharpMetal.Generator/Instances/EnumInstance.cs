@@ -1,4 +1,5 @@
 using System.Text.RegularExpressions;
+using SharpMetal.Generator.Utilities;
 
 namespace SharpMetal.Generator.Instances
 {
@@ -75,11 +76,11 @@ namespace SharpMetal.Generator.Instances
 
             while (!finishedEnumerating)
             {
-                var nextLine = sr.ReadLine();
+                var nextLine = GeneratorUtils.ReadNextCodeLine(sr);
 
-                if (string.IsNullOrEmpty(nextLine))
+                if (nextLine == null)
                 {
-                    continue;
+                    break;
                 }
 
                 if (nextLine.Contains("};"))

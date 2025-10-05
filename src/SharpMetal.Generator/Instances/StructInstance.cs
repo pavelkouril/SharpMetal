@@ -1,4 +1,5 @@
 using System.Text.RegularExpressions;
+using SharpMetal.Generator.Utilities;
 
 namespace SharpMetal.Generator.Instances
 {
@@ -55,7 +56,11 @@ namespace SharpMetal.Generator.Instances
 
             while (!structEnded)
             {
-                var propertyLine = sr.ReadLine() ?? "";
+                var propertyLine = GeneratorUtils.ReadNextCodeLine(sr);
+                if (propertyLine == null)
+                {
+                    break;
+                }
 
                 if (propertyLine.Contains('}'))
                 {
