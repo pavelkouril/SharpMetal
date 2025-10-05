@@ -36,7 +36,14 @@ namespace SharpMetal.Generator
             var enumCache = new List<EnumInstance>();
             var structCache = new List<StructInstance>();
             var classCache = new List<ClassInstance>();
+            var selectorDefinitions = new List<SelectorDefinition>();
 
+            // High-level overview of the generator:
+            // 0. Parse the files into our representation model (*Instance, uses cpp/swift naming)
+            // 1. Link the model into actual C# representable types (uses C# naming)
+            // 2. Emit the code - lightweight emit that should not modify the prepared data in any way
+
+            // Parse
             foreach (var header in headers)
             {
                 var info = GenerateHeaderInfo(header);
@@ -47,11 +54,17 @@ namespace SharpMetal.Generator
                     enumCache.AddRange(info.EnumInstances);
                     structCache.AddRange(info.StructInstances);
                     classCache.AddRange(info.ClassInstances);
+                    selectorDefinitions.AddRange(info.SelectorDefinitions);
                 }
             }
 
             var objectiveCInstances = new HashSet<ObjectiveCInstance>();
 
+            // Link
+            ModelLinker linker = new ModelLinker();
+            linker.Link(headerInfos, selectorDefinitions);
+
+            // Emit
             foreach (var header in headerInfos)
             {
                 Generate(header, classCache, enumCache, structCache, ref objectiveCInstances);

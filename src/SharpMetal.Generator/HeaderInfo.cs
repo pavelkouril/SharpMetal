@@ -11,6 +11,7 @@ namespace SharpMetal.Generator
         public List<ClassInstance> ClassInstances = [];
         public List<StructInstance> StructInstances = [];
         public List<MethodInstance> InFlightUnscopedMethods = [];
+        public List<SelectorDefinition> SelectorDefinitions = [];
 
         public HeaderInfo(string filePath)
         {
