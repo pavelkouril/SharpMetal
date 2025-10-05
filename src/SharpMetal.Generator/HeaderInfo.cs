@@ -18,7 +18,6 @@ namespace SharpMetal.Generator
             using var sr = new StreamReader(File.OpenRead(filePath));
             var namespacePrefix = Namespaces.GetNamespace(filePath);
             var macroNamespacePrefix = Namespaces.GetMacroNamespace(namespacePrefix);
-            var inMtlPrivateDefSel = false;
 
             while (!sr.EndOfStream)
             {
@@ -69,16 +68,10 @@ namespace SharpMetal.Generator
                     continue;
                 }
 
-                // These take two lines, no idea why
+                // These take two lines, no idea why, so let's just read two lines in one go
                 if (line.StartsWith("_MTL_PRIVATE_DEF_SEL"))
                 {
-                    inMtlPrivateDefSel = true;
-                    continue;
-                }
-
-                if (inMtlPrivateDefSel)
-                {
-                    inMtlPrivateDefSel = false;
+                    sr.ReadLine();
                     continue;
                 }
 
