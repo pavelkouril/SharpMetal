@@ -51,9 +51,17 @@ namespace SharpMetal.Generator.Linked
                 context.WriteLine($"namespace {ns.Name}");
                 context.EnterScope();
 
-                foreach (var type in ns.Types)
+                for (var index = 0; index < ns.Types.Count; index++)
                 {
+                    var type = ns.Types[index];
                     type.Generate(context);
+                    // TODO: For BC of the emitted code, we need to emit an empty line after enums, even if the file contains just enums
+                    // This will be removed to unify the emits later
+                    // But for now it makes less changes in diffs, which is good for refactoring the logic
+                    if (index != ns.Types.Count - 1 || type.Kind == TypeKind.Enum)
+                    {
+                        context.WriteLine();
+                    }
                 }
 
                 context.LeaveScope();

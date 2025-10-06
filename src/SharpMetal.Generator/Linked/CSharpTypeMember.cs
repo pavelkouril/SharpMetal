@@ -11,6 +11,8 @@ namespace SharpMetal.Generator.Linked
     {
         public string Name { get; private set; }
 
+        public string VisibilityModifier { get; set; } = "public";
+
         public MemberKind Kind { get; private set; }
 
         public CSharpTypeMember(string name, MemberKind kind)

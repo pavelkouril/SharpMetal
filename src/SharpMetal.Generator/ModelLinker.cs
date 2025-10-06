@@ -32,7 +32,14 @@ namespace SharpMetal.Generator
 
                 foreach (var structInstance in header.StructInstances)
                 {
-
+                    var csStruct = new CSharpStructType(structInstance.Name);
+                    foreach (var memberVariable in structInstance.MemberVariableInstances)
+                    {
+                        csStruct.AddMember(new CSharpField(memberVariable.Type, memberVariable.Name));
+                    }
+                    // Mark as sequential layout
+                    csStruct.Attributes.Add("[StructLayout(LayoutKind.Sequential)]");
+                    ns.AddType(csStruct);
                 }
 
                 foreach (var classInstance in header.ClassInstances)

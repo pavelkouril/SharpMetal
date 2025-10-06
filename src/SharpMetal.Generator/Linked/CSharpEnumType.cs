@@ -21,7 +21,7 @@ namespace SharpMetal.Generator.Linked
         {
             foreach (var value in values)
             {
-                var field = new CSharpField(value.Key);
+                var field = new CSharpEnumValue(value.Key);
                 if (!string.IsNullOrEmpty(value.Value))
                 {
                     field.DefaultValue = value.Value;

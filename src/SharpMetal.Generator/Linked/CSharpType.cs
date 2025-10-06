@@ -49,23 +49,12 @@ namespace SharpMetal.Generator.Linked
             context.WriteLine(typeDeclaration);
             context.EnterScope();
 
-            if (this is CSharpEnumType et)
+            foreach (var value in Members)
             {
-                foreach (var value in et.Members)
-                {
-                    if (value is CSharpField ft && ft.DefaultValue != null)
-                    {
-                        context.WriteLine($"{value.Name} = {ft.DefaultValue},");
-                    }
-                    else
-                    {
-                        context.WriteLine($"{value.Name},");
-                    }
-                }
+               value.Generate(context);
             }
 
             context.LeaveScope();
-            context.WriteLine();
 
             static string KindToType(TypeKind kind)
             {
