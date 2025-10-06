@@ -16,5 +16,18 @@ namespace SharpMetal.Generator.Linked
         {
             Attributes.Add("[Flags]");
         }
+
+        public void AddValues(Dictionary<string, string> values)
+        {
+            foreach (var value in values)
+            {
+                var field = new CSharpField(value.Key);
+                if (!string.IsNullOrEmpty(value.Value))
+                {
+                    field.DefaultValue = value.Value;
+                }
+                AddMember(field);
+            }
+        }
     }
 }

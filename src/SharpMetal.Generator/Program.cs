@@ -1,5 +1,6 @@
 using System.Runtime.CompilerServices;
 using SharpMetal.Generator.Instances;
+using SharpMetal.Generator.Linked;
 
 namespace SharpMetal.Generator
 {
@@ -62,12 +63,12 @@ namespace SharpMetal.Generator
 
             // Link
             ModelLinker linker = new ModelLinker();
-            linker.Link(headerInfos, selectorDefinitions);
+            var csharpFiles = linker.Link(headerInfos, selectorDefinitions, objectiveCInstances);
 
             // Emit
-            foreach (var header in headerInfos)
+            foreach (var csharpFile in csharpFiles)
             {
-                Generate(header, classCache, enumCache, structCache, ref objectiveCInstances);
+                Generate(csharpFile);
             }
 
             GenerateObjectiveC(objectiveCInstances);
@@ -85,28 +86,22 @@ namespace SharpMetal.Generator
             return headerInfo;
         }
 
+        public static void Generate(CSharpFile cSharpFile)
+        {
+            Directory.CreateDirectory(cSharpFile.Directory);
+            using CodeGenContext context = new(File.CreateText(cSharpFile.FilePath));
+
+            cSharpFile.Generate(context);
+        }
+
         public static void Generate(HeaderInfo headerInfo, List<ClassInstance> classCache, List<EnumInstance> enumCache, List<StructInstance> structCache, ref HashSet<ObjectiveCInstance> objectiveCInstances)
         {
-            var fileName = Path.GetFileNameWithoutExtension(headerInfo.FilePath);
-            var fullNamespace = Namespaces.GetFullNamespace(headerInfo.FilePath);
+            Directory.CreateDirectory(headerInfo.FullNamespace);
 
-            Directory.CreateDirectory(fullNamespace);
+            using CodeGenContext context = new(File.CreateText($"{headerInfo.FullNamespace}/{headerInfo.FileName}.cs"));
 
-            using CodeGenContext context = new(File.CreateText($"{fullNamespace}/{fileName}.cs"));
-
-            GenerateUsings(headerInfo, context, fullNamespace);
-
-            context.WriteLine($"namespace SharpMetal.{fullNamespace}");
+            context.WriteLine($"namespace SharpMetal.{headerInfo.FullNamespace}");
             context.EnterScope();
-
-            headerInfo.EnumInstances.Sort((a, b) => string.Compare(a.Name, b.Name, StringComparison.InvariantCultureIgnoreCase));
-            headerInfo.StructInstances.Sort((a, b) => string.Compare(a.Name, b.Name, StringComparison.InvariantCultureIgnoreCase));
-            headerInfo.ClassInstances.Sort((a, b) => string.Compare(a.Name, b.Name, StringComparison.InvariantCultureIgnoreCase));
-
-            foreach (var instance in headerInfo.EnumInstances.OrderBy(x => x.Name))
-            {
-                instance.Generate(context);
-            }
 
             for (var i = 0; i < headerInfo.StructInstances.Count; i++)
             {
@@ -138,61 +133,6 @@ namespace SharpMetal.Generator
             }
 
             context.LeaveScope();
-        }
-
-        public static void GenerateUsings(HeaderInfo headerInfo, CodeGenContext context, string fullNamespace)
-        {
-            var hasAnyUsings = false;
-
-            if (headerInfo.StructInstances.Count != 0)
-            {
-                context.WriteLine("using System.Runtime.InteropServices;");
-                hasAnyUsings = true;
-            }
-
-            if (headerInfo.StructInstances.Count != 0 || headerInfo.ClassInstances.Count != 0 || headerInfo.EnumInstances.Count != 0)
-            {
-                context.WriteLine("using System.Runtime.Versioning;");
-                hasAnyUsings = true;
-            }
-
-            // If have any class in the file, we need selectors due to ctors/disposes
-            if (headerInfo.ClassInstances.Count != 0)
-            {
-                context.WriteLine("using SharpMetal.ObjectiveCCore;");
-                hasAnyUsings = true;
-            }
-
-            if (headerInfo.IncludeFlags != IncludeFlags.None)
-            {
-                hasAnyUsings = true;
-                if ((headerInfo.IncludeFlags & IncludeFlags.Foundation) == IncludeFlags.Foundation)
-                {
-                    if (fullNamespace != "Foundation")
-                    {
-                        context.WriteLine("using SharpMetal.Foundation;");
-                    }
-                }
-                if ((headerInfo.IncludeFlags & IncludeFlags.Metal) == IncludeFlags.Metal)
-                {
-                    if (fullNamespace != "Metal")
-                    {
-                        context.WriteLine("using SharpMetal.Metal;");
-                    }
-                }
-                if ((headerInfo.IncludeFlags & IncludeFlags.QuartzCore) == IncludeFlags.QuartzCore)
-                {
-                    if (fullNamespace != "QuartzCore")
-                    {
-                        context.WriteLine("using SharpMetal.QuartzCore;");
-                    }
-                }
-            }
-
-            if (hasAnyUsings)
-            {
-                context.WriteLine();
-            }
         }
 
         public static void GenerateObjectiveC(HashSet<ObjectiveCInstance> objectiveCInstances)

@@ -6,6 +6,8 @@ namespace SharpMetal.Generator
     public class HeaderInfo
     {
         public string FilePath { get; }
+        public string FileName { get; }
+        public string FullNamespace { get; }
         public IncludeFlags IncludeFlags = IncludeFlags.None;
         public List<EnumInstance> EnumInstances = [];
         public List<ClassInstance> ClassInstances = [];
@@ -16,6 +18,8 @@ namespace SharpMetal.Generator
         public HeaderInfo(string filePath)
         {
             FilePath = filePath;
+            FileName = Path.GetFileNameWithoutExtension(filePath);
+            FullNamespace = Namespaces.GetFullNamespace(filePath);
             using var sr = new StreamReader(File.OpenRead(filePath));
             var namespacePrefix = Namespaces.GetNamespace(filePath);
             var macroNamespacePrefix = Namespaces.GetMacroNamespace(namespacePrefix);

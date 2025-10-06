@@ -11,5 +11,10 @@ namespace SharpMetal.Generator.Linked
             Name = name;
             Types = [];
         }
+
+        public void AddType(CSharpEnumType csEnum)
+        {
+            Types.Add(csEnum);
+        }
     }
 }

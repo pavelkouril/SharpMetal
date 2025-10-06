@@ -7,7 +7,7 @@ namespace SharpMetal.Generator.Linked
         Enum = 2,
     }
 
-    public class CSharpType
+    public abstract class CSharpType : ICodeFragmentProvider
     {
         public TypeKind Kind { get; private set; }
 
@@ -23,8 +23,14 @@ namespace SharpMetal.Generator.Linked
         {
             Kind = kind;
             Name = name;
+            BaseTypes = [];
             Members = [];
             Attributes = [];
+        }
+
+        public void AddMember(CSharpTypeMember member)
+        {
+            Members.Add(member);
         }
 
         public void Generate(CodeGenContext context)
@@ -43,15 +49,18 @@ namespace SharpMetal.Generator.Linked
             context.WriteLine(typeDeclaration);
             context.EnterScope();
 
-            foreach (var value in _values)
+            if (this is CSharpEnumType et)
             {
-                if (value.Value != string.Empty)
+                foreach (var value in et.Members)
                 {
-                    context.WriteLine($"{value.Key} = {value.Value},");
-                }
-                else
-                {
-                    context.WriteLine($"{value.Key},");
+                    if (value is CSharpField ft && ft.DefaultValue != null)
+                    {
+                        context.WriteLine($"{value.Name} = {ft.DefaultValue},");
+                    }
+                    else
+                    {
+                        context.WriteLine($"{value.Name},");
+                    }
                 }
             }
 
@@ -67,7 +76,8 @@ namespace SharpMetal.Generator.Linked
                     case TypeKind.Enum:
                         return "enum";
                 }
-                return new ArgumentOutOfRangeException(nameof(kind), $"'{kind}' not supported.");
+
+                throw new ArgumentOutOfRangeException(nameof(kind), $"'{kind}' not supported.");
             }
         }
     }

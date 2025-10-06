@@ -9,7 +9,7 @@ namespace SharpMetal.Generator.Instances
         public readonly string Name;
 
         public readonly bool IsFlag;
-        private readonly Dictionary<string, string> Values;
+        public readonly Dictionary<string, string> Values;
 
         private EnumInstance(string type, string name, bool isFlag, Dictionary<string, string> values)
         {
