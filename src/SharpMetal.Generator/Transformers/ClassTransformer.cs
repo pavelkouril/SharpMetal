@@ -117,6 +117,27 @@ namespace SharpMetal.Generator.Transformers
                 csMethod.IsStatic = method.IsStatic;
                 csClass.AddMember(csMethod);
 
+                CSharpMethod ptrArrayMethod = null;
+                if (method.InputInstances.Any(i => i.Type.Contains("[]")))
+                {
+                    var ptrArrayInputParameters = new List<(string, string, string)>(parameters);
+                    for (int i = 0; i < ptrArrayInputParameters.Count; i++)
+                    {
+                        if (!ptrArrayInputParameters[i].Item1.Contains("[]"))
+                        {
+                            continue;
+                        }
+                        // change to pointer type
+                        var item = ptrArrayInputParameters[i];
+                        item.Item1 = item.Item1.Replace("[]", "*");
+                        ptrArrayInputParameters[i] = item;
+                    }
+                    ptrArrayMethod = new CSharpMethod(method.Name, method.ReturnType, ptrArrayInputParameters);
+                    ptrArrayMethod.IsStatic = method.IsStatic;
+                    ptrArrayMethod.IsUnsafe = true;
+                    csClass.AddMember(ptrArrayMethod);
+                }
+
                 if (method.ReturnType == "void")
                 {
                     if (method.IsStatic)
@@ -140,7 +161,7 @@ namespace SharpMetal.Generator.Transformers
                             // Is Array parameter
                             if (method.InputInstances[index].Type.Contains("[]"))
                             {
-                                call += $", Marshal.UnsafeAddrOfPinnedArrayElement({method.InputInstances[index].Name}, 0)";
+                                call += $", {{0}}({method.InputInstances[index].Name}{{1}})";
                             }
                             else
                             {
@@ -149,7 +170,15 @@ namespace SharpMetal.Generator.Transformers
                         }
 
                         call += ")";
-                        csMethod.AddBodyLine(call);
+                        if (ptrArrayMethod != null)
+                        {
+                            csMethod.AddBodyLine(string.Format(call, "Marshal.UnsafeAddrOfPinnedArrayElement", ", 0"));
+                            ptrArrayMethod.AddBodyLine(string.Format(call, "new IntPtr", ""));
+                        }
+                        else
+                        {
+                            csMethod.AddBodyLine(call);
+                        }
                     }
                 }
                 else
@@ -205,7 +234,7 @@ namespace SharpMetal.Generator.Transformers
                         // Is Array parameter
                         else if (input.Type.Contains("[]"))
                         {
-                            line += $", Marshal.UnsafeAddrOfPinnedArrayElement({input.Name}, 0)";
+                            line += $", {{0}}({input.Name}{{1}})";
                         }
                         else
                         {
@@ -220,7 +249,15 @@ namespace SharpMetal.Generator.Transformers
 
                     line += ")";
 
-                    csMethod.AddBodyLine(line);
+                    if (ptrArrayMethod != null)
+                    {
+                        csMethod.AddBodyLine(string.Format(line, "Marshal.UnsafeAddrOfPinnedArrayElement", ", 0"));
+                        ptrArrayMethod.AddBodyLine(string.Format(line, "new IntPtr", ""));
+                    }
+                    else
+                    {
+                        csMethod.AddBodyLine(line);
+                    }
                 }
             }
 

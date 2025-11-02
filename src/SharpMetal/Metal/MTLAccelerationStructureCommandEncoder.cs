@@ -96,6 +96,11 @@ namespace SharpMetal.Metal
             ObjectiveCRuntime.objc_msgSend(NativePtr, sel_useHeapscount, Marshal.UnsafeAddrOfPinnedArrayElement(heaps, 0), count);
         }
 
+        public unsafe void UseHeaps(MTLHeap* heaps, ulong count)
+        {
+            ObjectiveCRuntime.objc_msgSend(NativePtr, sel_useHeapscount, new IntPtr(heaps), count);
+        }
+
         public void UseResource(MTLResource resource, MTLResourceUsage usage)
         {
             ObjectiveCRuntime.objc_msgSend(NativePtr, sel_useResourceusage, resource, (ulong)usage);
@@ -104,6 +109,11 @@ namespace SharpMetal.Metal
         public void UseResources(MTLResource[] resources, ulong count, MTLResourceUsage usage)
         {
             ObjectiveCRuntime.objc_msgSend(NativePtr, sel_useResourcescountusage, Marshal.UnsafeAddrOfPinnedArrayElement(resources, 0), count, (ulong)usage);
+        }
+
+        public unsafe void UseResources(MTLResource* resources, ulong count, MTLResourceUsage usage)
+        {
+            ObjectiveCRuntime.objc_msgSend(NativePtr, sel_useResourcescountusage, new IntPtr(resources), count, (ulong)usage);
         }
 
         public void WaitForFence(MTLFence fence)

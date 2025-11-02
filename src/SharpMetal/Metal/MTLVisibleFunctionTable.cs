@@ -59,6 +59,11 @@ namespace SharpMetal.Metal
             ObjectiveCRuntime.objc_msgSend(NativePtr, sel_setFunctionswithRange, Marshal.UnsafeAddrOfPinnedArrayElement(functions, 0), range);
         }
 
+        public unsafe void SetFunctions(MTLFunctionHandle* functions, NSRange range)
+        {
+            ObjectiveCRuntime.objc_msgSend(NativePtr, sel_setFunctionswithRange, new IntPtr(functions), range);
+        }
+
         public int SetOwner(IntPtr task_id_token)
         {
             return ObjectiveCRuntime.int_objc_msgSend(NativePtr, sel_setOwnerWithIdentity, task_id_token);

@@ -37,6 +37,11 @@ namespace SharpMetal.Metal
             ObjectiveCRuntime.objc_msgSend(NativePtr, sel_addResidencySetscount, Marshal.UnsafeAddrOfPinnedArrayElement(residencySets, 0), count);
         }
 
+        public unsafe void AddResidencySets(MTLResidencySet* residencySets, ulong count)
+        {
+            ObjectiveCRuntime.objc_msgSend(NativePtr, sel_addResidencySetscount, new IntPtr(residencySets), count);
+        }
+
         public MTLCommandBuffer CommandBuffer(MTLCommandBufferDescriptor descriptor)
         {
             return new(ObjectiveCRuntime.IntPtr_objc_msgSend(NativePtr, sel_commandBufferWithDescriptor, descriptor));
@@ -60,6 +65,11 @@ namespace SharpMetal.Metal
         public void RemoveResidencySets(MTLResidencySet[] residencySets, ulong count)
         {
             ObjectiveCRuntime.objc_msgSend(NativePtr, sel_removeResidencySetscount, Marshal.UnsafeAddrOfPinnedArrayElement(residencySets, 0), count);
+        }
+
+        public unsafe void RemoveResidencySets(MTLResidencySet* residencySets, ulong count)
+        {
+            ObjectiveCRuntime.objc_msgSend(NativePtr, sel_removeResidencySetscount, new IntPtr(residencySets), count);
         }
 
         private static readonly Selector sel_addResidencySet = "addResidencySet:";

@@ -64,6 +64,11 @@ namespace SharpMetal.Metal
             ObjectiveCRuntime.objc_msgSend(NativePtr, sel_setBuffersoffsetswithRange, Marshal.UnsafeAddrOfPinnedArrayElement(buffers, 0), Marshal.UnsafeAddrOfPinnedArrayElement(offsets, 0), range);
         }
 
+        public unsafe void SetBuffers(MTLBuffer* buffers, ulong* offsets, NSRange range)
+        {
+            ObjectiveCRuntime.objc_msgSend(NativePtr, sel_setBuffersoffsetswithRange, new IntPtr(buffers), new IntPtr(offsets), range);
+        }
+
         public void SetComputePipelineState(MTLComputePipelineState pipeline, ulong index)
         {
             ObjectiveCRuntime.objc_msgSend(NativePtr, sel_setComputePipelineStateatIndex, pipeline, index);
@@ -72,6 +77,11 @@ namespace SharpMetal.Metal
         public void SetComputePipelineStates(MTLComputePipelineState[] pipelines, NSRange range)
         {
             ObjectiveCRuntime.objc_msgSend(NativePtr, sel_setComputePipelineStateswithRange, Marshal.UnsafeAddrOfPinnedArrayElement(pipelines, 0), range);
+        }
+
+        public unsafe void SetComputePipelineStates(MTLComputePipelineState* pipelines, NSRange range)
+        {
+            ObjectiveCRuntime.objc_msgSend(NativePtr, sel_setComputePipelineStateswithRange, new IntPtr(pipelines), range);
         }
 
         public void SetDepthStencilState(MTLDepthStencilState depthStencilState, ulong index)
@@ -84,6 +94,11 @@ namespace SharpMetal.Metal
             ObjectiveCRuntime.objc_msgSend(NativePtr, sel_setDepthStencilStateswithRange, Marshal.UnsafeAddrOfPinnedArrayElement(depthStencilStates, 0), range);
         }
 
+        public unsafe void SetDepthStencilStates(MTLDepthStencilState* depthStencilStates, NSRange range)
+        {
+            ObjectiveCRuntime.objc_msgSend(NativePtr, sel_setDepthStencilStateswithRange, new IntPtr(depthStencilStates), range);
+        }
+
         public void SetIndirectCommandBuffer(MTLIndirectCommandBuffer indirectCommandBuffer, ulong index)
         {
             ObjectiveCRuntime.objc_msgSend(NativePtr, sel_setIndirectCommandBufferatIndex, indirectCommandBuffer, index);
@@ -92,6 +107,11 @@ namespace SharpMetal.Metal
         public void SetIndirectCommandBuffers(MTLIndirectCommandBuffer[] buffers, NSRange range)
         {
             ObjectiveCRuntime.objc_msgSend(NativePtr, sel_setIndirectCommandBufferswithRange, Marshal.UnsafeAddrOfPinnedArrayElement(buffers, 0), range);
+        }
+
+        public unsafe void SetIndirectCommandBuffers(MTLIndirectCommandBuffer* buffers, NSRange range)
+        {
+            ObjectiveCRuntime.objc_msgSend(NativePtr, sel_setIndirectCommandBufferswithRange, new IntPtr(buffers), range);
         }
 
         public void SetIntersectionFunctionTable(MTLIntersectionFunctionTable intersectionFunctionTable, ulong index)
@@ -104,6 +124,11 @@ namespace SharpMetal.Metal
             ObjectiveCRuntime.objc_msgSend(NativePtr, sel_setIntersectionFunctionTableswithRange, Marshal.UnsafeAddrOfPinnedArrayElement(intersectionFunctionTables, 0), range);
         }
 
+        public unsafe void SetIntersectionFunctionTables(MTLIntersectionFunctionTable* intersectionFunctionTables, NSRange range)
+        {
+            ObjectiveCRuntime.objc_msgSend(NativePtr, sel_setIntersectionFunctionTableswithRange, new IntPtr(intersectionFunctionTables), range);
+        }
+
         public void SetRenderPipelineState(MTLRenderPipelineState pipeline, ulong index)
         {
             ObjectiveCRuntime.objc_msgSend(NativePtr, sel_setRenderPipelineStateatIndex, pipeline, index);
@@ -112,6 +137,11 @@ namespace SharpMetal.Metal
         public void SetRenderPipelineStates(MTLRenderPipelineState[] pipelines, NSRange range)
         {
             ObjectiveCRuntime.objc_msgSend(NativePtr, sel_setRenderPipelineStateswithRange, Marshal.UnsafeAddrOfPinnedArrayElement(pipelines, 0), range);
+        }
+
+        public unsafe void SetRenderPipelineStates(MTLRenderPipelineState* pipelines, NSRange range)
+        {
+            ObjectiveCRuntime.objc_msgSend(NativePtr, sel_setRenderPipelineStateswithRange, new IntPtr(pipelines), range);
         }
 
         public void SetSamplerState(MTLSamplerState sampler, ulong index)
@@ -124,6 +154,11 @@ namespace SharpMetal.Metal
             ObjectiveCRuntime.objc_msgSend(NativePtr, sel_setSamplerStateswithRange, Marshal.UnsafeAddrOfPinnedArrayElement(samplers, 0), range);
         }
 
+        public unsafe void SetSamplerStates(MTLSamplerState* samplers, NSRange range)
+        {
+            ObjectiveCRuntime.objc_msgSend(NativePtr, sel_setSamplerStateswithRange, new IntPtr(samplers), range);
+        }
+
         public void SetTexture(MTLTexture texture, ulong index)
         {
             ObjectiveCRuntime.objc_msgSend(NativePtr, sel_setTextureatIndex, texture, index);
@@ -134,6 +169,11 @@ namespace SharpMetal.Metal
             ObjectiveCRuntime.objc_msgSend(NativePtr, sel_setTextureswithRange, Marshal.UnsafeAddrOfPinnedArrayElement(textures, 0), range);
         }
 
+        public unsafe void SetTextures(MTLTexture* textures, NSRange range)
+        {
+            ObjectiveCRuntime.objc_msgSend(NativePtr, sel_setTextureswithRange, new IntPtr(textures), range);
+        }
+
         public void SetVisibleFunctionTable(MTLVisibleFunctionTable visibleFunctionTable, ulong index)
         {
             ObjectiveCRuntime.objc_msgSend(NativePtr, sel_setVisibleFunctionTableatIndex, visibleFunctionTable, index);
@@ -142,6 +182,11 @@ namespace SharpMetal.Metal
         public void SetVisibleFunctionTables(MTLVisibleFunctionTable[] visibleFunctionTables, NSRange range)
         {
             ObjectiveCRuntime.objc_msgSend(NativePtr, sel_setVisibleFunctionTableswithRange, Marshal.UnsafeAddrOfPinnedArrayElement(visibleFunctionTables, 0), range);
+        }
+
+        public unsafe void SetVisibleFunctionTables(MTLVisibleFunctionTable* visibleFunctionTables, NSRange range)
+        {
+            ObjectiveCRuntime.objc_msgSend(NativePtr, sel_setVisibleFunctionTableswithRange, new IntPtr(visibleFunctionTables), range);
         }
 
         private static readonly Selector sel_alignment = "alignment";

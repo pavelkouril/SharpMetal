@@ -10,6 +10,7 @@ namespace SharpMetal.Generator.CSharpCodeGen
         public string ReturnType { get; private set; }
         public bool IsStatic { get; set; }
         public bool IsPartial { get; set; }
+        public bool IsUnsafe { get; set; }
 
         public CSharpMethod(string name, string returnType) : base(name, MemberKind.Method)
         {
@@ -50,6 +51,10 @@ namespace SharpMetal.Generator.CSharpCodeGen
             if (IsPartial)
             {
                 sb.Append(" partial");
+            }
+            if (IsUnsafe)
+            {
+                sb.Append(" unsafe");
             }
             // Special formatting case for ctors that have empty return type
             if (!string.IsNullOrEmpty(ReturnType))

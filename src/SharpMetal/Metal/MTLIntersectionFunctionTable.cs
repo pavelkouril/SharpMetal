@@ -85,6 +85,11 @@ namespace SharpMetal.Metal
             ObjectiveCRuntime.objc_msgSend(NativePtr, sel_setBuffersoffsetswithRange, Marshal.UnsafeAddrOfPinnedArrayElement(buffers, 0), Marshal.UnsafeAddrOfPinnedArrayElement(offsets, 0), range);
         }
 
+        public unsafe void SetBuffers(MTLBuffer* buffers, ulong* offsets, NSRange range)
+        {
+            ObjectiveCRuntime.objc_msgSend(NativePtr, sel_setBuffersoffsetswithRange, new IntPtr(buffers), new IntPtr(offsets), range);
+        }
+
         public void SetFunction(MTLFunctionHandle function, ulong index)
         {
             ObjectiveCRuntime.objc_msgSend(NativePtr, sel_setFunctionatIndex, function, index);
@@ -93,6 +98,11 @@ namespace SharpMetal.Metal
         public void SetFunctions(MTLFunctionHandle[] functions, NSRange range)
         {
             ObjectiveCRuntime.objc_msgSend(NativePtr, sel_setFunctionswithRange, Marshal.UnsafeAddrOfPinnedArrayElement(functions, 0), range);
+        }
+
+        public unsafe void SetFunctions(MTLFunctionHandle* functions, NSRange range)
+        {
+            ObjectiveCRuntime.objc_msgSend(NativePtr, sel_setFunctionswithRange, new IntPtr(functions), range);
         }
 
         public void SetOpaqueCurveIntersectionFunction(MTLIntersectionFunctionSignature signature, ulong index)
@@ -133,6 +143,11 @@ namespace SharpMetal.Metal
         public void SetVisibleFunctionTables(MTLVisibleFunctionTable[] functionTables, NSRange bufferRange)
         {
             ObjectiveCRuntime.objc_msgSend(NativePtr, sel_setVisibleFunctionTableswithBufferRange, Marshal.UnsafeAddrOfPinnedArrayElement(functionTables, 0), bufferRange);
+        }
+
+        public unsafe void SetVisibleFunctionTables(MTLVisibleFunctionTable* functionTables, NSRange bufferRange)
+        {
+            ObjectiveCRuntime.objc_msgSend(NativePtr, sel_setVisibleFunctionTableswithBufferRange, new IntPtr(functionTables), bufferRange);
         }
 
         private static readonly Selector sel_allocatedSize = "allocatedSize";

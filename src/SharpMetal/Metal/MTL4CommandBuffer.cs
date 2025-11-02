@@ -79,6 +79,11 @@ namespace SharpMetal.Metal
             ObjectiveCRuntime.objc_msgSend(NativePtr, sel_useResidencySetscount, Marshal.UnsafeAddrOfPinnedArrayElement(residencySets, 0), count);
         }
 
+        public unsafe void UseResidencySets(MTLResidencySet* residencySets, ulong count)
+        {
+            ObjectiveCRuntime.objc_msgSend(NativePtr, sel_useResidencySetscount, new IntPtr(residencySets), count);
+        }
+
         public void WriteTimestampIntoHeap(MTL4CounterHeap counterHeap, ulong index)
         {
             ObjectiveCRuntime.objc_msgSend(NativePtr, sel_writeTimestampIntoHeapatIndex, counterHeap, index);
