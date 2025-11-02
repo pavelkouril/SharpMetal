@@ -128,7 +128,8 @@ namespace SharpMetal.Generator
 
         private static void AddUsings(CSharpFile outputFile, HeaderInfo headerInfo)
         {
-            if (headerInfo.StructInstances.Count != 0)
+            // Structs and array parameters of methods need the interop services
+            if (headerInfo.StructInstances.Count != 0 || headerInfo.ClassInstances.Any(c => c.MethodInstances.Any(m => m.InputInstances.Any(i => i.Type.Contains("[]")))))
             {
                 outputFile.AddUsing("System.Runtime.InteropServices");
             }

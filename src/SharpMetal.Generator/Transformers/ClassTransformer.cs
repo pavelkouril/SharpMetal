@@ -107,18 +107,9 @@ namespace SharpMetal.Generator.Transformers
             {
                 var parameters = new List<(string, string, string)>();
 
-                // TODO: Handle array inputs
-                var hasArrayInput = false;
-
                 for (var i = 0; i < method.InputInstances.Count; i++)
                 {
                     var input = method.InputInstances[i];
-
-                    if (input.Type.Contains("[]"))
-                    {
-                        hasArrayInput = true;
-                    }
-
                     parameters.Add(($"{(input.Reference ? "ref " : "")}{input.Type}", input.Name, ""));
                 }
 
@@ -126,7 +117,7 @@ namespace SharpMetal.Generator.Transformers
                 csMethod.IsStatic = method.IsStatic;
                 csClass.AddMember(csMethod);
 
-                if (method.ReturnType == "void" && !hasArrayInput)
+                if (method.ReturnType == "void")
                 {
                     if (method.IsStatic)
                     {
@@ -146,14 +137,22 @@ namespace SharpMetal.Generator.Transformers
                                 cast = $"({enumInstance.BackingType})";
                             }
 
-                            call += $", {cast}{method.InputInstances[index].Name}";
+                            // Is Array parameter
+                            if (method.InputInstances[index].Type.Contains("[]"))
+                            {
+                                call += $", Marshal.UnsafeAddrOfPinnedArrayElement({method.InputInstances[index].Name}, 0)";
+                            }
+                            else
+                            {
+                                call += $", {cast}{method.InputInstances[index].Name}";
+                            }
                         }
 
                         call += ")";
                         csMethod.AddBodyLine(call);
                     }
                 }
-                else if (!hasArrayInput)
+                else
                 {
                     var line = "return ";
                     var returnEnum = parsedModel.FindEnum(method.ReturnType);
@@ -203,6 +202,11 @@ namespace SharpMetal.Generator.Transformers
                         {
                             line += $", ref {input.Name}.NativePtr";
                         }
+                        // Is Array parameter
+                        else if (input.Type.Contains("[]"))
+                        {
+                            line += $", Marshal.UnsafeAddrOfPinnedArrayElement({input.Name}, 0)";
+                        }
                         else
                         {
                             line += $", {input.Name}";
@@ -217,10 +221,6 @@ namespace SharpMetal.Generator.Transformers
                     line += ")";
 
                     csMethod.AddBodyLine(line);
-                }
-                else
-                {
-                    csMethod.AddBodyLine("throw new NotImplementedException()");
                 }
             }
 
