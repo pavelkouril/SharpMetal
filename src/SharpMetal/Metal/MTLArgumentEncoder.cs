@@ -73,6 +73,16 @@ namespace SharpMetal.Metal
             throw new NotImplementedException();
         }
 
+        public void SetDepthStencilState(MTLDepthStencilState depthStencilState, ulong index)
+        {
+            ObjectiveCRuntime.objc_msgSend(NativePtr, sel_setDepthStencilStateatIndex, depthStencilState, index);
+        }
+
+        public void SetDepthStencilStates(MTLDepthStencilState[] depthStencilStates, NSRange range)
+        {
+            throw new NotImplementedException();
+        }
+
         public void SetIndirectCommandBuffer(MTLIndirectCommandBuffer indirectCommandBuffer, ulong index)
         {
             ObjectiveCRuntime.objc_msgSend(NativePtr, sel_setIndirectCommandBufferatIndex, indirectCommandBuffer, index);
@@ -146,6 +156,8 @@ namespace SharpMetal.Metal
         private static readonly Selector sel_setBuffersoffsetswithRange = "setBuffers:offsets:withRange:";
         private static readonly Selector sel_setComputePipelineStateatIndex = "setComputePipelineState:atIndex:";
         private static readonly Selector sel_setComputePipelineStateswithRange = "setComputePipelineStates:withRange:";
+        private static readonly Selector sel_setDepthStencilStateatIndex = "setDepthStencilState:atIndex:";
+        private static readonly Selector sel_setDepthStencilStateswithRange = "setDepthStencilStates:withRange:";
         private static readonly Selector sel_setIndirectCommandBufferatIndex = "setIndirectCommandBuffer:atIndex:";
         private static readonly Selector sel_setIndirectCommandBufferswithRange = "setIndirectCommandBuffers:withRange:";
         private static readonly Selector sel_setIntersectionFunctionTableatIndex = "setIntersectionFunctionTable:atIndex:";

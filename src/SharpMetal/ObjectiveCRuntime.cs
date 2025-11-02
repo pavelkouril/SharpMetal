@@ -352,6 +352,9 @@ namespace SharpMetal
         internal static partial void objc_msgSend(IntPtr receiver, IntPtr selector, ulong a);
 
         [LibraryImport(ObjectiveC.ObjCRuntime, EntryPoint = "objc_msgSend")]
+        internal static partial void objc_msgSend(IntPtr receiver, IntPtr selector, float a, float b);
+
+        [LibraryImport(ObjectiveC.ObjCRuntime, EntryPoint = "objc_msgSend")]
         internal static partial void objc_msgSend(IntPtr receiver, IntPtr selector, IntPtr a, IntPtr b);
 
         [LibraryImport(ObjectiveC.ObjCRuntime, EntryPoint = "objc_msgSend")]

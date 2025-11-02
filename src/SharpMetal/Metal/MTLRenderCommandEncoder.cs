@@ -345,6 +345,11 @@ namespace SharpMetal.Metal
             ObjectiveCRuntime.objc_msgSend(NativePtr, sel_setDepthStoreActionOptions, (ulong)storeActionOptions);
         }
 
+        public void SetDepthTestBounds(float minBound, float maxBound)
+        {
+            ObjectiveCRuntime.objc_msgSend(NativePtr, sel_setDepthTestMinBoundmaxBound, minBound, maxBound);
+        }
+
         public void SetFragmentAccelerationStructure(MTLAccelerationStructure accelerationStructure, ulong bufferIndex)
         {
             ObjectiveCRuntime.objc_msgSend(NativePtr, sel_setFragmentAccelerationStructureatBufferIndex, accelerationStructure, bufferIndex);
@@ -380,14 +385,14 @@ namespace SharpMetal.Metal
             throw new NotImplementedException();
         }
 
-        public void SetFragmentSamplerState(MTLSamplerState sampler, ulong index)
-        {
-            ObjectiveCRuntime.objc_msgSend(NativePtr, sel_setFragmentSamplerStateatIndex, sampler, index);
-        }
-
         public void SetFragmentSamplerState(MTLSamplerState sampler, float lodMinClamp, float lodMaxClamp, ulong index)
         {
             ObjectiveCRuntime.objc_msgSend(NativePtr, sel_setFragmentSamplerStatelodMinClamplodMaxClampatIndex, sampler, lodMinClamp, lodMaxClamp, index);
+        }
+
+        public void SetFragmentSamplerState(MTLSamplerState sampler, ulong index)
+        {
+            ObjectiveCRuntime.objc_msgSend(NativePtr, sel_setFragmentSamplerStateatIndex, sampler, index);
         }
 
         public void SetFragmentSamplerStates(MTLSamplerState[] samplers, NSRange range)
@@ -868,9 +873,10 @@ namespace SharpMetal.Metal
         private static readonly Selector sel_setDepthStencilState = "setDepthStencilState:";
         private static readonly Selector sel_setDepthStoreAction = "setDepthStoreAction:";
         private static readonly Selector sel_setDepthStoreActionOptions = "setDepthStoreActionOptions:";
+        private static readonly Selector sel_setDepthTestMinBoundmaxBound = "setDepthTestMinBound:maxBound:";
         private static readonly Selector sel_setFragmentAccelerationStructureatBufferIndex = "setFragmentAccelerationStructure:atBufferIndex:";
-        private static readonly Selector sel_setFragmentBufferOffsetatIndex = "setFragmentBufferOffset:atIndex:";
         private static readonly Selector sel_setFragmentBufferoffsetatIndex = "setFragmentBuffer:offset:atIndex:";
+        private static readonly Selector sel_setFragmentBufferOffsetatIndex = "setFragmentBufferOffset:atIndex:";
         private static readonly Selector sel_setFragmentBuffersoffsetswithRange = "setFragmentBuffers:offsets:withRange:";
         private static readonly Selector sel_setFragmentByteslengthatIndex = "setFragmentBytes:length:atIndex:";
         private static readonly Selector sel_setFragmentIntersectionFunctionTableatBufferIndex = "setFragmentIntersectionFunctionTable:atBufferIndex:";
